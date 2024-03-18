@@ -8,7 +8,7 @@
 #include <stdio.h>
 
 const int PWM_0_PIN = 4; // Substitua por seu pino LED R
-const int PWM_1_PIN = 5; // Substitua por seu pino LED G
+const int PWM_1_PIN = 6; // Substitua por seu pino LED G
 
 void led_task(void *p) {
     gpio_set_function(PWM_0_PIN, GPIO_FUNC_PWM);
