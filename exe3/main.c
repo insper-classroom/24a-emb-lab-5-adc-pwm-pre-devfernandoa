@@ -1,12 +1,14 @@
 #include <FreeRTOS.h>
-#include <task.h>
-#include <semphr.h>
 #include <queue.h>
+#include <semphr.h>
+#include <task.h>
 
 #include "pico/stdlib.h"
 #include <stdio.h>
 
 #include "data.h"
+
+#define MOVING_AVERAGE_SIZE 5
 QueueHandle_t xQueueData;
 
 // não mexer! Alimenta a fila com os dados do sinal
@@ -25,15 +27,26 @@ void data_task(void *p) {
 
 void process_task(void *p) {
     int data = 0;
+    int moving_average_data[MOVING_AVERAGE_SIZE] = {0};
+    int sum = 0;
+    int count = 0;
 
     while (true) {
         if (xQueueReceive(xQueueData, &data, 100)) {
             // implementar filtro aqui!
-
-
-
-
-            // deixar esse delay!
+            // Remover o dado mais antigo do total
+            sum -= moving_average_data[count % MOVING_AVERAGE_SIZE];
+            // Adicionar o novo dado ao array
+            moving_average_data[count % MOVING_AVERAGE_SIZE] = data;
+            // Adicionar o novo dado ao total
+            sum += data;
+            // Calcular a média móvel
+            int moving_average = sum / MOVING_AVERAGE_SIZE;
+            // Imprimir o dado filtrado na UART
+            printf("Dado filtrado: %d\n", moving_average);
+            // Incrementar o contador
+            count++;
+            // Deixar esse delay!
             vTaskDelay(pdMS_TO_TICKS(50));
         }
     }
