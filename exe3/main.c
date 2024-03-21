@@ -25,7 +25,7 @@ void data_task(void *p) {
     }
 }
 
-void process_task(void *p) {
+void process_task(void *p){
     int data = 0;
     int moving_average_data[MOVING_AVERAGE_SIZE] = {0};
     int sum = 0;
